@@ -19,3 +19,7 @@ bin-release/
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+work
+.nextflow.log*
+.nextflow
