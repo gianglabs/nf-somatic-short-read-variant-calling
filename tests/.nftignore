@@ -2,3 +2,6 @@ pipeline_info/*
 **/*.{bcf,vcf,vcf.gz,vcf.gz.tbi,html,yml}
 alignment/**/*.{cram,crai}
 variant_annotation/**/*.{csv,html}
+variant_alignment_qc/**/*.txt
+variant_alignment_qc/**/*.bed
+variant_alignment_qc/**/*.bedgraph
