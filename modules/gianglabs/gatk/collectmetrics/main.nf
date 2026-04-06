@@ -37,9 +37,9 @@ process GATK_COLLECTMETRICS {
      END_VERSIONS
      """
 
-     stub:
-     def prefix = "${meta.id}"
-     """
+    stub:
+    def prefix = "${meta.id}"
+    """
      touch ${prefix}_alignment_summary.txt
      touch ${prefix}_insert_size_metrics.txt
      touch ${prefix}_insert_size_histogram.pdf

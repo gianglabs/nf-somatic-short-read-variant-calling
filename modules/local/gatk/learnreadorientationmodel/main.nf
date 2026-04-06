@@ -16,13 +16,13 @@ process GATK_LEARNREADORIENTATIONMODEL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def f1r2_command = f1r2.collect { "--input $it" }.join(' ')
+    def f1r2_command = f1r2.collect { "--input ${it}" }.join(' ')
 
     """
     gatk LearnReadOrientationModel \\
-        $f1r2_command \\
+        ${f1r2_command} \\
         --output ${prefix}.artifact-prior.tar.gz \\
-        $args
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

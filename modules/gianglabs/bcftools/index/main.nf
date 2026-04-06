@@ -1,5 +1,5 @@
 process TABIX_INDEX_VCF {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_single'
 
     input:

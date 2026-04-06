@@ -31,8 +31,8 @@ process GATKSPARK_MARKDUPLICATES {
      END_VERSIONS
      """
 
-     stub:
-     """
+    stub:
+    """
      touch ${meta.id}.bam
      touch ${meta.id}.bam.bai
      touch ${meta.id}.metrics

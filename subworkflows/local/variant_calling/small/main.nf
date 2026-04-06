@@ -50,8 +50,7 @@ workflow SMALL_VARIANT_CALLING {
         ch_out_vcf_tbi = ch_out_vcf_tbi.mix(GATK_MUTECT2.out.tbi)
 
         GATK_LEARNREADORIENTATIONMODEL(
-            GATK_MUTECT2.out.f1r2
-                .map { meta, f1r2 -> [meta, [f1r2]] }
+            GATK_MUTECT2.out.f1r2.map { meta, f1r2 -> [meta, [f1r2]] }
         )
         ch_versions = ch_versions.mix(GATK_LEARNREADORIENTATIONMODEL.out.versions)
     }
@@ -64,10 +63,12 @@ workflow SMALL_VARIANT_CALLING {
         )
         ch_versions = ch_versions.mix(STRELKA.out.versions)
 
-        ch_strelka_snv = STRELKA.out.vcf_snvs.join(STRELKA.out.vcf_snvs_tbi)
+        ch_strelka_snv = STRELKA.out.vcf_snvs
+            .join(STRELKA.out.vcf_snvs_tbi)
             .map { meta, vcf, tbi -> [meta + [id: "${meta.id}.strelka.snvs"], vcf, tbi] }
 
-        ch_strelka_indel = STRELKA.out.vcf_indels.join(STRELKA.out.vcf_indels_tbi)
+        ch_strelka_indel = STRELKA.out.vcf_indels
+            .join(STRELKA.out.vcf_indels_tbi)
             .map { meta, vcf, tbi -> [meta + [id: "${meta.id}.strelka.indels"], vcf, tbi] }
 
         ch_out_vcf = ch_out_vcf.mix(ch_strelka_snv.map { meta, vcf, tbi -> [meta, vcf] })

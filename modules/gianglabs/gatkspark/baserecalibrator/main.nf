@@ -41,8 +41,8 @@ process GATKSPARK_BASERECALIBRATOR {
      END_VERSIONS
      """
 
-     stub:
-     """
+    stub:
+    """
      touch ${meta.id}_recal.table
      
      cat <<-END_VERSIONS > versions.yml

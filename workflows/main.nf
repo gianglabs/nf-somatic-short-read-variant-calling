@@ -16,24 +16,60 @@ workflow SOMATIC_VARIANT_CALLING {
     if (params.genome && params.genomes.containsKey(params.genome)) {
         def igenome_ref = params.genomes[params.genome]
         if (igenome_ref) {
-            if (igenome_ref.fasta) params.reference = igenome_ref.fasta
-            if (igenome_ref.fasta_fai) params.reference_index = igenome_ref.fasta_fai
-            if (igenome_ref.dict) params.reference_dict = igenome_ref.dict
-            if (igenome_ref.index_bwa2_reference != null) params.index_bwa2_reference = igenome_ref.index_bwa2_reference
-            if (igenome_ref.bwa2_index) params.bwa2_index = igenome_ref.bwa2_index
-            if (igenome_ref.dbsnp) params.dbsnp = igenome_ref.dbsnp
-            if (igenome_ref.dbsnp_tbi) params.dbsnp_tbi = igenome_ref.dbsnp_tbi
-            if (igenome_ref.known_indels) params.known_indels = igenome_ref.known_indels
-            if (igenome_ref.known_indels_tbi) params.known_indels_tbi = igenome_ref.known_indels_tbi
-            if (igenome_ref.germline_resource) params.germline_resource = igenome_ref.germline_resource
-            if (igenome_ref.germline_resource_tbi) params.germline_resource_tbi = igenome_ref.germline_resource_tbi
-            if (igenome_ref.panel_of_normals) params.panel_of_normals = igenome_ref.panel_of_normals
-            if (igenome_ref.panel_of_normals_tbi) params.panel_of_normals_tbi = igenome_ref.panel_of_normals_tbi
-            if (igenome_ref.snpeff_cache) params.snpeff_cache = igenome_ref.snpeff_cache
-            if (igenome_ref.vep_cache_version) params.vep_cache_version = igenome_ref.vep_cache_version
-            if (igenome_ref.vep_genome) params.vep_genome = igenome_ref.vep_genome
-            if (igenome_ref.vep_species) params.vep_species = igenome_ref.vep_species
-            if (igenome_ref.vep_cache) params.vep_cache = igenome_ref.vep_cache
+            if (igenome_ref.fasta) {
+                params.reference = igenome_ref.fasta
+            }
+            if (igenome_ref.fasta_fai) {
+                params.reference_index = igenome_ref.fasta_fai
+            }
+            if (igenome_ref.dict) {
+                params.reference_dict = igenome_ref.dict
+            }
+            if (igenome_ref.index_bwa2_reference != null) {
+                params.index_bwa2_reference = igenome_ref.index_bwa2_reference
+            }
+            if (igenome_ref.bwa2_index) {
+                params.bwa2_index = igenome_ref.bwa2_index
+            }
+            if (igenome_ref.dbsnp) {
+                params.dbsnp = igenome_ref.dbsnp
+            }
+            if (igenome_ref.dbsnp_tbi) {
+                params.dbsnp_tbi = igenome_ref.dbsnp_tbi
+            }
+            if (igenome_ref.known_indels) {
+                params.known_indels = igenome_ref.known_indels
+            }
+            if (igenome_ref.known_indels_tbi) {
+                params.known_indels_tbi = igenome_ref.known_indels_tbi
+            }
+            if (igenome_ref.germline_resource) {
+                params.germline_resource = igenome_ref.germline_resource
+            }
+            if (igenome_ref.germline_resource_tbi) {
+                params.germline_resource_tbi = igenome_ref.germline_resource_tbi
+            }
+            if (igenome_ref.panel_of_normals) {
+                params.panel_of_normals = igenome_ref.panel_of_normals
+            }
+            if (igenome_ref.panel_of_normals_tbi) {
+                params.panel_of_normals_tbi = igenome_ref.panel_of_normals_tbi
+            }
+            if (igenome_ref.snpeff_cache) {
+                params.snpeff_cache = igenome_ref.snpeff_cache
+            }
+            if (igenome_ref.vep_cache_version) {
+                params.vep_cache_version = igenome_ref.vep_cache_version
+            }
+            if (igenome_ref.vep_genome) {
+                params.vep_genome = igenome_ref.vep_genome
+            }
+            if (igenome_ref.vep_species) {
+                params.vep_species = igenome_ref.vep_species
+            }
+            if (igenome_ref.vep_cache) {
+                params.vep_cache = igenome_ref.vep_cache
+            }
         }
     }
 

@@ -5,8 +5,12 @@ ${HOME}/.pixi/bin/pixi:
 
 # snapshot
 # nf-test snapshot tests
+test-e2e: test-fastq-snapshot
+	echo "Execute entrypoint of test-fastq-snapshot"
+
 test-fastq-snapshot: ${HOME}/.pixi/bin/pixi
 	export NXF_FILE_ROOT=${PWD}; ${HOME}/.pixi/bin/pixi run nf-test test \
+		tests/default.nf.test \
 		--verbose \
 		--profile docker,test_fastq
 
@@ -44,7 +48,11 @@ test-cram-multi: ${HOME}/.pixi/bin/pixi
 		-resume
 # Lint
 lint: ${HOME}/.pixi/bin/pixi
-	${HOME}/.pixi/bin/pixi run nextflow lint $(shell find . -name "*.nf") -format
+	${HOME}/.pixi/bin/pixi run nextflow lint $(shell find . -name "*.nf" \
+		-not -path "./.pixi/*" \
+		-not -path "./.nextflow/*" \
+		-not -path "./work/*" \
+		-not -path "./results/*") -format
 
 # Clean
 clean:

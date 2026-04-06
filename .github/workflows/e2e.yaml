@@ -13,4 +13,4 @@ jobs:
 
       - name: Running testing
         run: |
-          make test-fastq-snapshot
+          make test-e2e

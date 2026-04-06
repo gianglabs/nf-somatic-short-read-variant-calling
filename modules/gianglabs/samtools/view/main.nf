@@ -1,5 +1,5 @@
 process SAMTOOLS_VIEW {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     input:

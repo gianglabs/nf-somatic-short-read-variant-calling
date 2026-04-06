@@ -38,8 +38,8 @@ process GATKSPARK_APPLYBQSR {
      END_VERSIONS
      """
 
-     stub:
-     """
+    stub:
+    """
      touch ${meta.id}_recal.bam
      touch ${meta.id}_recal.bam.bai
      

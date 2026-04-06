@@ -26,20 +26,20 @@ process GATK_MUTECT2 {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def inputs_command = input.collect { "--input $it" }.join(' ')
-    def germline_resource_command = germline_resource ? "--germline-resource $germline_resource" : ""
-    def panel_of_normals_command = panel_of_normals ? "--panel-of-normals $panel_of_normals" : ""
+    def inputs_command = input.collect { "--input ${it}" }.join(' ')
+    def germline_resource_command = germline_resource ? "--germline-resource ${germline_resource}" : ""
+    def panel_of_normals_command = panel_of_normals ? "--panel-of-normals ${panel_of_normals}" : ""
 
     """
     gatk Mutect2 \
-        --reference $fasta \
-        $inputs_command \
-        $germline_resource_command \
-        $panel_of_normals_command \
+        --reference ${fasta} \
+        ${inputs_command} \
+        ${germline_resource_command} \
+        ${panel_of_normals_command} \
         --output ${prefix}.vcf.gz \
         --f1r2-tar-gz ${prefix}.f1r2.tar.gz \
         --native-pair-hmm-threads ${task.cpus} \
-        $args
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -17,8 +17,6 @@ include { SOMATIC_VARIANT_CALLING } from './workflows/main.nf'
 
 workflow {
 
-    main:
-
     //
     // Validate input samplesheet
     //
@@ -42,7 +40,7 @@ workflow {
 
             if (row.cram && row.crai) {
                 def data = [
-                    type : 'cram',
+                    type: 'cram',
                     align: file(row.cram, checkIfExists: true),
                     index: file(row.crai, checkIfExists: true),
                 ]
@@ -50,7 +48,7 @@ workflow {
             }
             else if (row.bam && row.bai) {
                 def data = [
-                    type : 'bam',
+                    type: 'bam',
                     align: file(row.bam, checkIfExists: true),
                     index: file(row.bai, checkIfExists: true),
                 ]
@@ -58,7 +56,7 @@ workflow {
             }
             else {
                 def data = [
-                    type : 'fastq',
+                    type: 'fastq',
                     reads: [
                         file(row.fastq_1, checkIfExists: true),
                         file(row.fastq_2, checkIfExists: true),
@@ -72,16 +70,17 @@ workflow {
             def normal_idx = -1
             def tumor_idx = -1
 
-            for (int i = 0; i < meta_list.size(); i++) {
-                if (meta_list[i].status == 0) {
-                    normal_idx = i
-                } else if (meta_list[i].status == 1) {
-                    tumor_idx = i
+            meta_list.eachWithIndex { sample_meta, idx ->
+                if (sample_meta.status == 0) {
+                    normal_idx = idx
+                }
+                else if (sample_meta.status == 1) {
+                    tumor_idx = idx
                 }
             }
-            
+
             if (normal_idx == -1 || tumor_idx == -1) {
-                error "Patient ${patient} must have both normal (status=0) and tumor (status=1) samples"
+                error("Patient ${patient} must have both normal (status=0) and tumor (status=1) samples")
             }
 
             def pair_meta = [:]
