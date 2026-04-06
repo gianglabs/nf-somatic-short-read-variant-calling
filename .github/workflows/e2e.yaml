@@ -1,0 +1,16 @@
+name: Testing e2e
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Running testing
+        run: |
+          make test-fastq-snapshot
