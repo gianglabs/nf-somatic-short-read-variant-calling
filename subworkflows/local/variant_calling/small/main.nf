@@ -1,64 +1,83 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl = 2
 
-// FreeBayes
-include { FREEBAYES } from '../../../../modules/local/freebayes/main'
-
-// GATK modules (TODO: implement these modules)
-// include { GATK_HAPLOTYPECALLER } from '../../../../modules/local/gatk/haplotypecaller/main'
-// include { GATK_GENOTYPEGVCFS } from '../../../../modules/local/gatk/genotypegvcfs/main'
-// include { GATK_SELECTVARIANTS_SNP } from '../../../../modules/local/gatk/selectvariants_snp/main'
-// include { GATK_VARIANTFILTRATION_SNP } from '../../../../modules/local/gatk/variantfiltration_snp/main'
-// include { GATK_SELECTVARIANTS_INDEL } from '../../../../modules/local/gatk/selectvariants_indel/main'
-// include { GATK_VARIANTFILTRATION_INDEL } from '../../../../modules/local/gatk/variantfiltration_indel/main'
-// include { GATK_MERGEVCFS } from '../../../../modules/local/gatk/mergevcfs/main'
-
-// DeepVariant (TODO: implement this module)
-// include { DEEPVARIANT } from '../../../../modules/local/deepvariant/main'
+include { GATK_MUTECT2 } from '../../../../modules/local/gatk/mutect2/main'
+include { GATK_LEARNREADORIENTATIONMODEL } from '../../../../modules/local/gatk/learnreadorientationmodel/main'
+include { STRELKA } from '../../../../modules/local/strelka/main'
 
 workflow SMALL_VARIANT_CALLING {
     take:
-    variant_caller // value: variant calling variant_caller (e.g. "freebayes")
-    bam // channel: [ val(meta), path(bam) ]
-    bai // channel: [ val(meta), path(bai) ]
-    ref_fasta // value: path(fasta)
-    ref_fai // value: path(fai)
-    ref_dict // value: path(dict)
-    dbsnp_vcf // value: path(vcf)
-    dbsnp_tbi // value: path(tbi)
+    variant_caller // value: mutect2,strelka
+    tn_pairs // channel: [ val(pair_meta), path(normal_align), path(normal_index), path(tumor_align), path(tumor_index) ]
+    ref_fasta // path(fasta)
+    ref_fai // path(fai)
+    ref_dict // path(dict)
+    germline_resource_vcf // path(vcf)
+    germline_resource_tbi // path(tbi)
+    panel_of_normals_vcf // path(vcf)
+    panel_of_normals_tbi // path(tbi)
 
     main:
     ch_versions = channel.empty()
+    ch_out_vcf = channel.empty()
+    ch_out_vcf_tbi = channel.empty()
 
-    if (variant_caller == "gatk") {
-        error("GATK variant calling is not yet implemented. Please use 'freebayes' for now.")
+    callers = variant_caller.split(',').collect { it.trim().toLowerCase() }.findAll { it }
+    if (!callers) {
+        error("No somatic small variant caller provided. Use --somatic_variant_caller with one or more callers: mutect2,strelka")
     }
-    else if (variant_caller == "freebayes") {
-        // FREEBAYES is included as proof of concept for variant calling with multipler tools, less accurate than GATK and deepvariant
-        // Its output will not be processed as gvcf for cohort joint genotyping, but it can be used for single-sample variant calling
-        FREEBAYES(
-            bam.join(bai),
+
+    if (callers.any { !(it in ['mutect2', 'strelka']) }) {
+        error("Unsupported somatic small variant caller(s): ${callers}. Supported callers: mutect2,strelka")
+    }
+
+    if (callers.contains('mutect2')) {
+        GATK_MUTECT2(
+            tn_pairs.map { pair_meta, normal_align, normal_index, tumor_align, tumor_index ->
+                [pair_meta, [normal_align, tumor_align], [normal_index, tumor_index]]
+            },
+            ref_fasta,
+            ref_fai,
+            ref_dict,
+            germline_resource_vcf,
+            germline_resource_tbi,
+            panel_of_normals_vcf,
+            panel_of_normals_tbi,
+        )
+
+        ch_versions = ch_versions.mix(GATK_MUTECT2.out.versions)
+        ch_out_vcf = ch_out_vcf.mix(GATK_MUTECT2.out.vcf)
+        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(GATK_MUTECT2.out.tbi)
+
+        GATK_LEARNREADORIENTATIONMODEL(
+            GATK_MUTECT2.out.f1r2
+                .map { meta, f1r2 -> [meta, [f1r2]] }
+        )
+        ch_versions = ch_versions.mix(GATK_LEARNREADORIENTATIONMODEL.out.versions)
+    }
+
+    if (callers.contains('strelka')) {
+        STRELKA(
+            tn_pairs,
             ref_fasta,
             ref_fai,
         )
-        ch_versions = ch_versions.mix(FREEBAYES.out.versions)
-        ch_out_vcf = FREEBAYES.out.vcf
-        ch_out_vcf_tbi = FREEBAYES.out.vcf_tbi
-        ch_out_gvcf = channel.empty()
-        // FreeBayes does not produce gVCF output
-        ch_out_gvcf_tbi = channel.empty()
-    }
-    else if (variant_caller == "deepvariant") {
-        error("DeepVariant variant calling is not yet implemented. Please use 'freebayes' for now.")
-    }
-    else {
-        error("Unsupported variant calling variant_caller: ${variant_caller}")
+        ch_versions = ch_versions.mix(STRELKA.out.versions)
+
+        ch_strelka_snv = STRELKA.out.vcf_snvs.join(STRELKA.out.vcf_snvs_tbi)
+            .map { meta, vcf, tbi -> [meta + [id: "${meta.id}.strelka.snvs"], vcf, tbi] }
+
+        ch_strelka_indel = STRELKA.out.vcf_indels.join(STRELKA.out.vcf_indels_tbi)
+            .map { meta, vcf, tbi -> [meta + [id: "${meta.id}.strelka.indels"], vcf, tbi] }
+
+        ch_out_vcf = ch_out_vcf.mix(ch_strelka_snv.map { meta, vcf, tbi -> [meta, vcf] })
+        ch_out_vcf = ch_out_vcf.mix(ch_strelka_indel.map { meta, vcf, tbi -> [meta, vcf] })
+        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(ch_strelka_snv.map { meta, vcf, tbi -> [meta, tbi] })
+        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(ch_strelka_indel.map { meta, vcf, tbi -> [meta, tbi] })
     }
 
     emit:
-    vcf = ch_out_vcf // channel: [ val(meta), path(vcf.gz) ]
-    vcf_tbi = ch_out_vcf_tbi // channel: [ val(meta), path(vcf.gz.tbi) ]
-    gvcf = ch_out_gvcf // channel: [ val(meta), path(gvcf.gz) ] (null if not applicable)
-    gvcf_tbi = ch_out_gvcf_tbi // channel: [ val(meta), path(gvcf.gz.tbi) ] (null if not applicable)
+    vcf = ch_out_vcf
+    vcf_tbi = ch_out_vcf_tbi
     versions = ch_versions
 }

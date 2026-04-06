@@ -32,42 +32,70 @@ workflow {
     channel.fromPath(params.input, checkIfExists: true)
         .splitCsv(header: true)
         .map { row ->
-            // Create metadata map
             def meta = [:]
-            meta.id = row.patient ?: error("patient field is required in samplesheet")
             meta.patient = row.patient
-            meta.sex = row.sex ?: "unknown"
-            meta.status = row.status ? row.status.toInteger() : 0  // 0 = normal, 1 = tumor
-            meta.sample = row.sample ?: row.patient
+            meta.sex = row.sex
+            meta.status = row.status.toInteger()
+            meta.sample = row.sample
             meta.lane = row.lane ?: "L001"
-            meta.read_group = "${meta.sample}_${meta.lane}"
+            meta.id = row.sample
 
-            // Determine input type and validate files
             if (row.cram && row.crai) {
-                // CRAM mode
-                def cram = file(row.cram, checkIfExists: true)
-                def crai = file(row.crai, checkIfExists: true)
-                return [meta, cram, crai]
+                def data = [
+                    type : 'cram',
+                    align: file(row.cram, checkIfExists: true),
+                    index: file(row.crai, checkIfExists: true),
+                ]
+                return [row.patient, meta, data]
             }
             else if (row.bam && row.bai) {
-                // BAM mode
-                def bam = file(row.bam, checkIfExists: true)
-                def bai = file(row.bai, checkIfExists: true)
-                return [meta, bam, bai]
-            }
-            else if (row.fastq_1 && row.fastq_2) {
-                // FASTQ mode
-                def reads = [
-                    file(row.fastq_1, checkIfExists: true),
-                    file(row.fastq_2, checkIfExists: true)
+                def data = [
+                    type : 'bam',
+                    align: file(row.bam, checkIfExists: true),
+                    index: file(row.bai, checkIfExists: true),
                 ]
-                return [meta, reads]
+                return [row.patient, meta, data]
             }
             else {
-                error("Each row must have either: (cram + crai), (bam + bai), or (fastq_1 + fastq_2)")
+                def data = [
+                    type : 'fastq',
+                    reads: [
+                        file(row.fastq_1, checkIfExists: true),
+                        file(row.fastq_2, checkIfExists: true),
+                    ],
+                ]
+                return [row.patient, meta, data]
             }
         }
-    .set { ch_input }
+        .groupTuple()
+        .map { patient, meta_list, data_list ->
+            def normal_idx = -1
+            def tumor_idx = -1
+
+            for (int i = 0; i < meta_list.size(); i++) {
+                if (meta_list[i].status == 0) {
+                    normal_idx = i
+                } else if (meta_list[i].status == 1) {
+                    tumor_idx = i
+                }
+            }
+            
+            if (normal_idx == -1 || tumor_idx == -1) {
+                error "Patient ${patient} must have both normal (status=0) and tumor (status=1) samples"
+            }
+
+            def pair_meta = [:]
+            pair_meta.patient = patient
+            pair_meta.sex = meta_list[0].sex
+            pair_meta.normal_id = meta_list[normal_idx].sample
+            pair_meta.normal_lane = meta_list[normal_idx].lane
+            pair_meta.tumor_id = meta_list[tumor_idx].sample
+            pair_meta.tumor_lane = meta_list[tumor_idx].lane
+            pair_meta.id = "${pair_meta.tumor_id}_vs_${pair_meta.normal_id}"
+
+            return [pair_meta, data_list[normal_idx], data_list[tumor_idx]]
+        }
+        .set { ch_input }
 
 
 

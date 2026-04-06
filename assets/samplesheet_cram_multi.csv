@@ -1,0 +1,5 @@
+patient,sex,status,sample,lane,cram,crai
+HCC1395_1,XX,0,HCC1395N_1,1,assets/input/cram/HCC1395N_merged.cram,assets/input/cram/HCC1395N_merged.cram.crai
+HCC1395_1,XX,1,HCC1395T_1,1,assets/input/cram/HCC1395T_merged.cram,assets/input/cram/HCC1395T_merged.cram.crai
+HCC1395_2,XX,0,HCC1395N_2,1,assets/input/cram/HCC1395N_merged.cram,assets/input/cram/HCC1395N_merged.cram.crai
+HCC1395_2,XX,1,HCC1395T_2,1,assets/input/cram/HCC1395T_merged.cram,assets/input/cram/HCC1395T_merged.cram.crai

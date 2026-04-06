@@ -71,9 +71,8 @@ workflow ALIGNMENT {
     //
     SAMTOOLS_SORT.out.bam
         .map { meta, bam ->
-            def new_meta = [:]
+            def new_meta = [:] + meta
             new_meta.id = meta.sample
-            new_meta.sample = meta.sample
             return [new_meta.id, new_meta, bam]
         }
         .groupTuple()
