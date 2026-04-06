@@ -1,0 +1,3 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+HCC1395,XX,0,HCC1395N,1,assets/input/fastq/HCC1395N_subset_R1.fastq.gz,assets/input/fastq/HCC1395N_subset_R2.fastq.gz
+HCC1395,XX,1,HCC1395T,1,assets/input/fastq/HCC1395T_subset_R1.fastq.gz,assets/input/fastq/HCC1395T_subset_R2.fastq.gz

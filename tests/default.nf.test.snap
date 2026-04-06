@@ -1,0 +1,73 @@
+{
+    "single-fastq": {
+        "content": [
+            [
+                "alignment",
+                "alignment/HCC1395N",
+                "alignment/HCC1395N/HCC1395N_merged.cram",
+                "alignment/HCC1395N/HCC1395N_merged.cram.crai",
+                "alignment/HCC1395T",
+                "alignment/HCC1395T/HCC1395T_merged.cram",
+                "alignment/HCC1395T/HCC1395T_merged.cram.crai",
+                "bwa2_index",
+                "bwa2_index/chr22.fasta.0123",
+                "bwa2_index/chr22.fasta.amb",
+                "bwa2_index/chr22.fasta.ann",
+                "bwa2_index/chr22.fasta.bwt.2bit.64",
+                "bwa2_index/chr22.fasta.pac",
+                "bwa2_index/versions.yml",
+                "variant_alignment_qc",
+                "variant_alignment_qc/HCC1395T",
+                "variant_alignment_qc/HCC1395T/HCC1395T_coverage.bedgraph",
+                "variant_alignment_qc/HCC1395T/versions.yml",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.candidate_indels",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.candidate_indels/HCC1395T_vs_HCC1395N.manta.candidate_indels_indel_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.candidate_indels/HCC1395T_vs_HCC1395N.manta.candidate_indels_snp_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.candidate_indels/HCC1395T_vs_HCC1395N.manta.candidate_indels_variant_stats.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.candidate_indels/HCC1395T_vs_HCC1395N.manta.candidate_indels_variants.bed",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.candidate_indels/versions.yml",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.somatic_sv",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.somatic_sv/HCC1395T_vs_HCC1395N.manta.somatic_sv_indel_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.somatic_sv/HCC1395T_vs_HCC1395N.manta.somatic_sv_snp_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.somatic_sv/HCC1395T_vs_HCC1395N.manta.somatic_sv_variant_stats.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.somatic_sv/HCC1395T_vs_HCC1395N.manta.somatic_sv_variants.bed",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.manta.somatic_sv/versions.yml",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.indels",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.indels/HCC1395T_vs_HCC1395N.strelka.indels_indel_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.indels/HCC1395T_vs_HCC1395N.strelka.indels_snp_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.indels/HCC1395T_vs_HCC1395N.strelka.indels_variant_stats.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.indels/HCC1395T_vs_HCC1395N.strelka.indels_variants.bed",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.indels/versions.yml",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.snvs",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.snvs/HCC1395T_vs_HCC1395N.strelka.snvs_indel_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.snvs/HCC1395T_vs_HCC1395N.strelka.snvs_snp_count.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.snvs/HCC1395T_vs_HCC1395N.strelka.snvs_variant_stats.txt",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.snvs/HCC1395T_vs_HCC1395N.strelka.snvs_variants.bed",
+                "variant_alignment_qc/HCC1395T_vs_HCC1395N.strelka.snvs/versions.yml",
+                "variant_calling",
+                "variant_calling/HCC1395T_vs_HCC1395N",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.candidate_small_indels.vcf.gz",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.candidate_small_indels.vcf.gz.tbi",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.somatic_indels.vcf.gz",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.somatic_indels.vcf.gz.tbi",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.somatic_snvs.vcf.gz",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.somatic_snvs.vcf.gz.tbi",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.somatic_sv.vcf.gz",
+                "variant_calling/HCC1395T_vs_HCC1395N/HCC1395T_vs_HCC1395N.somatic_sv.vcf.gz.tbi",
+                "variant_calling/HCC1395T_vs_HCC1395N/versions.yml"
+            ],
+            [
+                "chr22.fasta.0123:md5,8fa3abf34200ccbbdd8536f9cefed95d",
+                "chr22.fasta.amb:md5,264db5d0d4d1017d209c20e98d41d2e2",
+                "chr22.fasta.ann:md5,9891c001c334b01fbd835340997e37be",
+                "chr22.fasta.bwt.2bit.64:md5,fa64d6b80c9ad135477ab75fe7c44413",
+                "chr22.fasta.pac:md5,a1bd3051e7e86e022fe732609e1e7c4f"
+            ]
+        ],
+        "timestamp": "2026-04-06T19:06:52.011791509",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
+    }
+}
