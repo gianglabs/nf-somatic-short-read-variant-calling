@@ -13,15 +13,15 @@ This repository implements a comprehensive Nextflow pipeline for somatic short-r
 The pipeline is optimized for the following workflow:
 
 - **Input**: Illumina short-read FASTQ files (~30X coverage) or pre-aligned BAM/CRAM files
-- **Quality Control**: FASTP for read-level quality filtering
+- **Quality Filtering**: FASTP for read-level trimming and quality filtering
 - **Alignment**: BWA-MEM2 alignment to GRCh38 (hg38) reference genome (or skip if BAM/CRAM input)
 - **Preprocessing**: Optional alignment preprocessing (disabled by default)
-- **Variant Calling**:
+- **Variant Calling**: 
   - **Small Variants**: Mutect2, Strelka, or DeepSomatic (somatic SNP/INDEL detection)
   - **Structural Variants**: Manta (SV detection)
-- **Quality Reports**:
-  - Alignment quality metrics (samtools stats, FastQC, MultiQC)
-  - Variant call quality reports
+- **Quality Metrics**:
+  - Variant statistics (bcftools stats)
+  - Genomic coverage analysis (bedtools genomecov)
 - **Variant Annotation**:
   - **SnpEff** (annotation database)
   - **VEP** (Ensembl Variant Effect Predictor)
@@ -165,19 +165,19 @@ Output files will be generated in the `results/` directory. File structure depen
 #### FASTQ Input Results:
 
 - `results/alignment/*.bam` - Aligned BAM files
-- `results/alignment_qc/` - Alignment quality reports
 - `results/variant_calling/*.vcf.gz` - Raw variant calls
 - `results/variant_annotation/*.vcf` - Annotated variants
+- `results/qc/` - Quality metrics (variant stats, coverage bedgraph)
 
 #### CRAM Input Results:
 
 - `results/variant_calling/*.vcf.gz` - Raw variant calls (from converted BAM)
 - `results/variant_annotation/*.vcf` - Annotated variants
+- `results/qc/` - Quality metrics (variant stats, coverage bedgraph)
 - No intermediate BAM files (discarded after variant calling unless configured otherwise)
 
 Common output files:
 
-- `results/multiqc_report.html` - Interactive quality control report
 - `results/pipeline_info/` - Execution timeline and trace logs
 
 For more advanced usage and configuration options, see the [Pipeline Architecture](docs/architecture.md) documentation.
@@ -188,7 +188,7 @@ For more advanced usage and configuration options, see the [Pipeline Architectur
 - **Somatic Small Variant Callers**: Mutect2, Strelka, DeepSomatic
 - **Somatic Structural Variant Callers**: Manta
 - **Tumor-Normal Pairing**: Built-in support for matched tumor-normal samples
-- **Quality Control**: FastQC, MultiQC, samtools stats
+- **Quality Metrics**: Variant statistics (bcftools), genomic coverage (bedtools)
 - **Variant Annotation**: SnpEff, VEP
 - **CRAM Support**: Built-in CRAM→BAM conversion for efficient re-calling
 - **Flexible Configuration**: Container support (Docker/Singularity), multiple profiles
