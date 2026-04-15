@@ -229,7 +229,6 @@ workflow SOMATIC_VARIANT_CALLING {
         ch_versions = ch_versions.mix(SMALL_VARIANT_CALLING.out.versions)
         ch_all_vcf = ch_all_vcf.mix(SMALL_VARIANT_CALLING.out.vcf)
         ch_all_vcf_tbi = ch_all_vcf_tbi.mix(SMALL_VARIANT_CALLING.out.vcf_tbi)
-        
     }
 
     if (params.structural_variant_caller) {

@@ -3,9 +3,8 @@ process BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS {
     label 'process_single'
     container 'quay.io/biocontainers/bcftools:1.23--h3a4d415_0'
 
-
     input:
-    tuple val(meta), path(vcf),  path(vcf_tbi)
+    tuple val(meta), path(vcf), path(vcf_tbi)
 
     output:
     tuple val(meta), path("${meta.id}.somatic.vcf.gz"), emit: somatic

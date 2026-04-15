@@ -30,7 +30,7 @@ workflow SMALL_VARIANT_CALLING {
         error("No somatic small variant caller provided. Use --somatic_variant_caller with one or more callers: mutect2,strelka")
     }
 
-    if (callers.any { !(it in ['mutect2', 'strelka','deepsomatic']) }) {
+    if (callers.any { !(it in ['mutect2', 'strelka', 'deepsomatic']) }) {
         error("Unsupported somatic small variant caller(s): ${callers}. Supported callers: mutect2,strelka,deepsomatic")
     }
 
@@ -79,7 +79,7 @@ workflow SMALL_VARIANT_CALLING {
         ch_out_vcf_tbi = ch_out_vcf_tbi.mix(ch_strelka_snv.map { meta, vcf, tbi -> [meta, tbi] })
         ch_out_vcf_tbi = ch_out_vcf_tbi.mix(ch_strelka_indel.map { meta, vcf, tbi -> [meta, tbi] })
     }
-    else if (callers.contains('deepsomatic')){
+    else if (callers.contains('deepsomatic')) {
         DEEPSOMATIC(
             tn_pairs,
             ref_fasta,
@@ -87,17 +87,17 @@ workflow SMALL_VARIANT_CALLING {
             deepsomatic_model_type,
         )
         ch_versions = ch_versions.mix(DEEPSOMATIC.out.versions)
-        
+
         BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS(
             DEEPSOMATIC.out.vcf.join(DEEPSOMATIC.out.vcf_tbi)
         )
 
-        ch_out_vcf = ch_out_vcf.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.somatic.map { meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.somatic"], vcf]})
-        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.somatic_tbi.map{ meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.somatic"], vcf]})
+        ch_out_vcf = ch_out_vcf.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.somatic.map { meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.somatic"], vcf] })
+        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.somatic_tbi.map { meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.somatic"], vcf] })
 
 
-        ch_out_vcf = ch_out_vcf.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.germline.map{ meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.germline"], vcf]})
-        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.germline_tbi.map{ meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.germline"], vcf]})
+        ch_out_vcf = ch_out_vcf.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.germline.map { meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.germline"], vcf] })
+        ch_out_vcf_tbi = ch_out_vcf_tbi.mix(BCFTOOLS_FILTER_DEEPSOMATIC_VARIANTS.out.germline_tbi.map { meta, vcf -> [meta + [id: "${meta.id}.deepsomatic.germline"], vcf] })
     }
 
     emit:

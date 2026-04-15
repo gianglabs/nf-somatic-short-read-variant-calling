@@ -1,8 +1,9 @@
 process DEEPSOMATIC {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     container "docker.io/google/deepsomatic:1.10.0"
+
     input:
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
     path fasta
@@ -10,11 +11,11 @@ process DEEPSOMATIC {
     val model_type
 
     output:
-    tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
-    tuple val(meta), path("${prefix}.vcf.gz.tbi")  ,  emit: vcf_tbi
-    tuple val(meta), path("${prefix}.g.vcf.gz")    ,  emit: gvcf
-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"),  emit: gvcf_tbi
-    path "versions.yml"                            ,  emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz"), emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi
+    tuple val(meta), path("${prefix}.g.vcf.gz"), emit: gvcf
+    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,7 +39,7 @@ process DEEPSOMATIC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        deepsomatic: $VERSION
+        deepsomatic: ${VERSION}
     END_VERSIONS
     """
 
@@ -53,7 +54,7 @@ process DEEPSOMATIC {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        deepsomatic: $VERSION
+        deepsomatic: ${VERSION}
     END_VERSIONS
     """
 }
