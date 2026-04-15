@@ -24,7 +24,7 @@ test-fastq-update-snapshot: ${HOME}/.pixi/bin/pixi
 
 # FASTQ input test - full pipeline with alignment
 test-fastq: ${HOME}/.pixi/bin/pixi
-	${HOME}/.pixi/bin/pixi run nextflow run main.nf \\
+	${HOME}/.pixi/bin/pixi run nextflow run main.nf \
 		-profile docker,test_fastq \
 		-resume
 

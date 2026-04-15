@@ -220,6 +220,7 @@ workflow SOMATIC_VARIANT_CALLING {
             ref_fasta,
             ref_fai,
             ref_dict,
+            params.deepsomatic_model_type,
             germline_resource_vcf,
             germline_resource_tbi,
             panel_of_normals_vcf,
